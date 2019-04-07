@@ -22,4 +22,6 @@ public class User {
 	@NotBlank(message="Password is required.")
 	@Size(min = 6)
 	private String password;
+	
+	
 }
