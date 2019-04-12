@@ -1,4 +1,4 @@
-package com.junior.helpdesk.enums;
+package com.junior.helpdesk.api.enums;
 
 public enum ProfileEnum {
 	ROLE_ADMIN,

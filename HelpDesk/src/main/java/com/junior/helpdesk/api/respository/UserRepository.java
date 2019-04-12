@@ -1,4 +1,4 @@
-package com.junior.helpdesk.respository;
+package com.junior.helpdesk.api.respository;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 

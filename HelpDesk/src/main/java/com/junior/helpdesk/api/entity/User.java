@@ -8,7 +8,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.junior.helpdesk.enums.ProfileEnum;
+import com.junior.helpdesk.api.enums.ProfileEnum;
 
 @Document
 public class User {
