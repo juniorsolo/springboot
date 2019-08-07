@@ -1,15 +1,20 @@
 package com.junior.helpdesk.api.controller;
 
+import java.util.Optional;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -104,7 +109,64 @@ public class UserController {
 	
 	@GetMapping(value = "{id}")
 	@PreAuthorize("hasAnyHole('ADMIN')")
-	public ResponseEntity<User> findById(){
-		return null;
+	public ResponseEntity<Response<User>> findById(@PathVariable("id") String id){
+		try {
+			Response<User> response = new Response<User>();
+			Optional<User> user = userService.findById(id);
+			
+			if(!user.isPresent()) {
+				response.getErros().add("User not found by id:" + id);
+				return ResponseEntity.badRequest().body(response);
+			}
+			response.setData(user.get());
+			
+			return ResponseEntity.ok(response);
+		}catch (Exception e) {
+			return ResponseEntity.badRequest().body(new Response<User>());
+		}
 	}
+	
+	@DeleteMapping(value = "{id}")
+	@PreAuthorize("hasAnyHole('ADMIN')")
+	public ResponseEntity<Response<String>> delete(@PathVariable("id") String id){
+		
+		try {
+			Response<String> response = new Response<String>();
+				
+			Optional<User> user = userService.findById(id);
+			
+			if(!user.isPresent()) {
+				response.getErros().add("User not found by id:" + id);
+				return ResponseEntity.badRequest().body(response);
+			}
+			userService.delete(id);
+			
+			return ResponseEntity.ok(response);
+		}catch (Exception e) {
+			return ResponseEntity.badRequest().body(new Response<String>());
+		}
+	}
+	@GetMapping(value = "{page}/{count}")
+	@PreAuthorize("hasAnyHole('ADMIN')")
+	public ResponseEntity<Response<Page<User>>> findAll(@PathVariable("page") int page, @PathVariable("count") int count){
+		
+		try {
+			Response<Page<User>> response = new Response<Page<User>>();
+			Page<User> userPages = userService.findAll(page, count);
+			response.setData(userPages);
+			
+			return ResponseEntity.ok(response);
+		
+		}catch (Exception e) {
+			return ResponseEntity.badRequest().body(new Response<Page<User>>());
+		}
+		
+	}
+	
+	
+	
+	
+	
+	
+	
 }
