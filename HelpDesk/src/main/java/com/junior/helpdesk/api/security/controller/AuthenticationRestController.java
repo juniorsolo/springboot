@@ -53,7 +53,7 @@ public class AuthenticationRestController {
 	
 	@PostMapping(value="/api/refresh")
 	public ResponseEntity<?> refreshAndGetAuthenticationToken(HttpServletRequest request){
-		String token = request.getHeader("authorization");
+		String token = request.getHeader("Authorization");
 		String username = jwtTokenUtil.getUsernameFromToken(token);
 		final User user =  userService.findByEmail(username);
 		

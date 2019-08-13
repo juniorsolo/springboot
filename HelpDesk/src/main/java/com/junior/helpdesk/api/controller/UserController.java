@@ -5,6 +5,7 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,7 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.junior.helpdesk.api.entity.User;
 import com.junior.helpdesk.api.response.Response;
 import com.junior.helpdesk.api.service.UserService;
-import com.mongodb.DuplicateKeyException;
 
 @RestController
 @RequestMapping("/api/user")
@@ -38,7 +38,7 @@ public class UserController {
 	private PasswordEncoder passwordEncoder;
 	
 	@PostMapping
-	@PreAuthorize("hasAnyHole('ADMIN')")
+	//@PreAuthorize("hasAnyHole('ADMIN')")
 	public ResponseEntity<Response<User>> create(HttpServletRequest request, @RequestBody User user,
 			BindingResult result){
 		Response<User> response = new Response<>();
