@@ -38,7 +38,7 @@ public class UserController {
 	private PasswordEncoder passwordEncoder;
 	
 	@PostMapping
-	//@PreAuthorize("hasAnyHole('ADMIN')")
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	public ResponseEntity<Response<User>> create(HttpServletRequest request, @RequestBody User user,
 			BindingResult result){
 		Response<User> response = new Response<>();
@@ -71,7 +71,7 @@ public class UserController {
 	}
 	
 	@PutMapping
-	@PreAuthorize("hasAnyHole('ADMIN')")
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	public ResponseEntity<Response<User>> update(HttpServletRequest request, @RequestBody User user,
 			BindingResult result){
 		Response<User> response = new Response<>();
@@ -101,14 +101,14 @@ public class UserController {
 			result.addError(new ObjectError("User", "Id não informado!"));
 		}
 		
-		if(user != null && user.getEmail() != null) {
+		if(user != null && user.getEmail() == null) {
 			result.addError(new ObjectError("User", "Email não informado!"));
 		}
 		
 	}
 	
 	@GetMapping(value = "{id}")
-	@PreAuthorize("hasAnyHole('ADMIN')")
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	public ResponseEntity<Response<User>> findById(@PathVariable("id") String id){
 		try {
 			Response<User> response = new Response<User>();
@@ -127,7 +127,7 @@ public class UserController {
 	}
 	
 	@DeleteMapping(value = "{id}")
-	@PreAuthorize("hasAnyHole('ADMIN')")
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	public ResponseEntity<Response<String>> delete(@PathVariable("id") String id){
 		
 		try {
@@ -147,7 +147,7 @@ public class UserController {
 		}
 	}
 	@GetMapping(value = "{page}/{count}")
-	@PreAuthorize("hasAnyHole('ADMIN')")
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	public ResponseEntity<Response<Page<User>>> findAll(@PathVariable("page") int page, @PathVariable("count") int count){
 		
 		try {
