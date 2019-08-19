@@ -1,5 +1,7 @@
 package com.junior.helpdesk.api.service.impl;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,8 +29,8 @@ public class TicketServiceImpl implements TicketService{
 	}
 
 	@Override
-	public Ticket findById(String id) {
-		return this.ticketRepository.findById(id).orElseGet(null);
+	public Optional<Ticket> findById(String id) {
+		return this.ticketRepository.findById(id);
 	}
 
 	@Override

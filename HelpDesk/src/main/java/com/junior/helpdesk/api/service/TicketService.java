@@ -1,5 +1,7 @@
 package com.junior.helpdesk.api.service;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 
 import com.junior.helpdesk.api.entity.ChangeStatus;
@@ -9,7 +11,7 @@ public interface TicketService {
 	
 	Ticket createOrUpdate(Ticket ticket);
 	
-	Ticket findById(String id);
+	Optional<Ticket> findById(String id);
 	
 	void delete(String id);
 	
