@@ -15,6 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -149,7 +150,7 @@ public class TicketController {
 	}
 	
 	@GetMapping(value= "{id}")
-	@PreAuthorize("hasAnyHole('CUSTOMER','TECHNICIAN')")
+	@PreAuthorize("hasAnyRole('CUSTOMER','TECHNICIAN')")
 	public ResponseEntity<Response<Ticket>> findById(@PathVariable("id") String id){
 		Response<Ticket> response = new Response<>();
 		try {
@@ -176,6 +177,33 @@ public class TicketController {
 			response.setData(optional.get());
 			
 		}catch (Exception e) {
+			return ResponseEntity.badRequest().body(response);
+		}
+		return ResponseEntity.ok(response);
+	}
+	
+	@DeleteMapping(value = "/{id}")
+	@PreAuthorize("hasAnyRole('CUSTOMER')")
+	public ResponseEntity<Response<String>> delete(@PathVariable("id") String id){
+		Response<String> response = new Response<>();
+		try{
+			
+			if(StringUtils.isBlank(id)) {
+				response.getErros().add("Paramter Id invalid.");
+			    throw new Exception("Paramter Id invalid.");
+			}
+			
+			Optional<Ticket> optional= ticketService.findById(id);
+			
+			if(!optional.isPresent()) {
+				response.getErros().add("Register not found by id:"+id);
+				 throw new Exception("Register not found by id:"+id);
+			}
+			
+			ticketService.delete(id);
+			
+		}catch (Exception e) {
+			response.getErros().add("Erro in method delete ticket.");
 			return ResponseEntity.badRequest().body(response);
 		}
 		return ResponseEntity.ok(response);
