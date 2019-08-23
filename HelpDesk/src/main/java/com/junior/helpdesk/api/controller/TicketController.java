@@ -1,6 +1,8 @@
 package com.junior.helpdesk.api.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -13,12 +15,15 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.junior.helpdesk.api.entity.ChangeStatus;
 import com.junior.helpdesk.api.entity.Ticket;
 import com.junior.helpdesk.api.entity.User;
 import com.junior.helpdesk.api.enums.StatusEnum;
@@ -141,5 +146,38 @@ public class TicketController {
 			result.addError(new ObjectError("Ticket", "Title ticket is null."));
 		}
 			
+	}
+	
+	@GetMapping(value= "{id}")
+	@PreAuthorize("hasAnyHole('CUSTOMER','TECHNICIAN')")
+	public ResponseEntity<Response<Ticket>> findById(@PathVariable("id") String id){
+		Response<Ticket> response = new Response<>();
+		try {
+			if(StringUtils.isBlank(id)) {
+				response.getErros().add("Paramter Id invalid.");
+			    throw new Exception("Paramter Id invalid.");
+			}
+			
+			Optional<Ticket> optional =  ticketService.findById(id);
+			
+			if(!optional.isPresent()) {
+				response.getErros().add("Register not found by id:"+id);
+				 throw new Exception("Register not found by id:"+id);
+			}
+			List<ChangeStatus> listaStatus = new ArrayList<ChangeStatus>();
+			Iterable<ChangeStatus> listaStatusCurrent = ticketService.listChangeStatus(id);
+			
+			for (ChangeStatus changeStatus : listaStatusCurrent) {
+				changeStatus.setTicket(null);
+				listaStatus.add(changeStatus);
+			}
+			
+			optional.get().setChanges(listaStatus);
+			response.setData(optional.get());
+			
+		}catch (Exception e) {
+			return ResponseEntity.badRequest().body(response);
+		}
+		return ResponseEntity.ok(response);
 	}
 }
