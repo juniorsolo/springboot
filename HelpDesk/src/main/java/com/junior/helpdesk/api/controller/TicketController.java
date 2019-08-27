@@ -232,4 +232,45 @@ public class TicketController {
 		}
 		return ResponseEntity.ok(response);
 	}
+	
+	@GetMapping(value="{page}/{count}/{number}/{title}/{status}/{priority}/{assigned}")
+	@PreAuthorize("hasAnyRole('CUSTOMER',TECHNICIAN)")
+	public ResponseEntity<Response<Page<Ticket>>> findByParams(HttpServletRequest request, 
+			@PathVariable("paage") int page, @PathVariable("count") int count,
+			@PathVariable("number") Integer number, @PathVariable("title") String title,
+			@PathVariable("status") String status, @PathVariable("priority") String priority,
+			@PathVariable("assigned") boolean assigned){
+		
+		Response<Page<Ticket>> response = new Response<>();
+		Page<Ticket> tickets = null;
+		
+		title = title.equals("uninfomed") ? "" : title;
+		status = status.equals("uninformed") ? "" : status;
+		priority = priority.equals("uninformed") ? "" : priority;
+		
+		try {
+			if(number > 0) {
+				tickets = ticketService.findByNumber(page, count, number);
+			}else {
+				
+				User userRequest = userFromRequest(request);
+				
+				if(userRequest.getProfile().equals(ProfileEnum.ROLE_TECHNICIAN)) {
+					if(assigned) {
+						tickets = ticketService.findByParametersAndAssignedUser(page, count, title, status, priority, userRequest.getId());
+					}else {
+						tickets = ticketService.findByParameters(page, count, title, status, priority);
+					}
+				} else if(userRequest.getProfile().equals(ProfileEnum.ROLE_CUSTOMER)) {
+					tickets = ticketService.findByParametersAndCurrentUser(page, count, title, status, priority, userRequest.getId());
+				}
+			}
+			response.setData(tickets);
+		}catch (Exception e) {
+			response.getErros().add(e.getMessage());
+			return ResponseEntity.badRequest().body(response);
+		}
+		
+		return ResponseEntity.ok(response);
+	}
 }
