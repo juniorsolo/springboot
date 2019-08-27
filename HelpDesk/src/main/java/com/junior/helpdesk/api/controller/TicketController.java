@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.junior.helpdesk.api.entity.ChangeStatus;
 import com.junior.helpdesk.api.entity.Ticket;
 import com.junior.helpdesk.api.entity.User;
+import com.junior.helpdesk.api.enums.ProfileEnum;
 import com.junior.helpdesk.api.enums.StatusEnum;
 import com.junior.helpdesk.api.response.Response;
 import com.junior.helpdesk.api.security.jwt.JwtTokenUtil;
@@ -123,7 +125,7 @@ public class TicketController {
 			ticket.setDate(ticketCurrentOptional.get().getDate());
 			ticket.setNumber(ticketCurrentOptional.get().getNumber());
 			
-			if(ticketCurrentOptional.get().getAssignedUser() == null) {
+			if(ticketCurrentOptional.get().getAssignedUser() != null) {
 				ticket.setAssignedUser(ticketCurrentOptional.get().getAssignedUser());
 			}
 			Ticket ticketPersisted = ticketService.createOrUpdate(ticket);
@@ -205,6 +207,28 @@ public class TicketController {
 		}catch (Exception e) {
 			response.getErros().add("Erro in method delete ticket.");
 			return ResponseEntity.badRequest().body(response);
+		}
+		return ResponseEntity.ok(response);
+	}
+	
+	@GetMapping(value = "{page}/{count}")
+	@PreAuthorize("hasAnyRole('CUSTOMER','TECHNICIAN')")
+	public ResponseEntity<Response<Page<Ticket>>> findAll(HttpServletRequest request, 
+	@PathVariable("page") int page, @PathVariable("count") int count){
+		Response<Page<Ticket>> response = new Response<>();
+		Page<Ticket> tickets = null;
+		
+		try {
+			User userRequest = userFromRequest(request);
+			if(userRequest.getProfile().equals(ProfileEnum.ROLE_TECHNICIAN)) {
+				tickets = ticketService.listTicket(page, count);
+			}else if(userRequest.getProfile().equals(ProfileEnum.ROLE_CUSTOMER)) {
+				tickets = ticketService.findByCurrentUser(page, count, userRequest.getId());
+			}
+			response.setData(tickets);
+		}catch (Exception e) {
+			response.getErros().add("Error in findAll method. " + e.getMessage());
+			ResponseEntity.badRequest().body(response);
 		}
 		return ResponseEntity.ok(response);
 	}
