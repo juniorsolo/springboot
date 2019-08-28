@@ -273,4 +273,58 @@ public class TicketController {
 		
 		return ResponseEntity.ok(response);
 	}
+	
+	@PutMapping(value="/{id}/{status}")
+	@PreAuthorize("hasAnyRole('CUSTOMER','TECHNICIAN')")
+	public ResponseEntity<Response<Ticket>> changeStatus(HttpServletRequest request, @PathVariable("id") String id,
+			@PathVariable("status") String status, BindingResult result){
+		
+		Response<Ticket> response = new Response<>();
+		
+		try {
+			this.validateChangeStatus(id, status, result);
+			
+			if(result.hasErrors()) {
+				result.getAllErrors().forEach(error -> response.getErros().add(error.getDefaultMessage()));
+				return ResponseEntity.badRequest().body(response);
+			}
+			
+			Optional<Ticket> current = ticketService.findById(id);
+			
+			if(!current.isPresent()) {
+				response.getErros().add("No avaliable find ticket id:" + id);
+				return ResponseEntity.badRequest().body(response);
+			}
+			
+			current.get().setStatus(StatusEnum.getStatus(status));
+			
+			if(status.equals("Assigned")) {
+				current.get().setAssignedUser(userFromRequest(request));
+			}	
+			Ticket ticketPersited = ticketService.createOrUpdate(current.get());
+			ChangeStatus changeStatus = new ChangeStatus();
+			changeStatus.setUserChange(userFromRequest(request));
+			changeStatus.setDateChangeStatus(new Date());
+			changeStatus.setStatus(StatusEnum.getStatus(status));
+			changeStatus.setTicket(ticketPersited);
+			ticketService.createChangeStatus(changeStatus);
+			response.setData(ticketPersited);
+			 
+		}catch (Exception e) {
+			response.getErros().add(e.getMessage());
+			return ResponseEntity.badRequest().body(response);
+		}
+		return ResponseEntity.ok(response);
+	}
+	
+	private void validateChangeStatus(String id, String status, BindingResult result) {
+		
+		if(StringUtils.isBlank(id)) {
+			result.addError(new ObjectError("Ticket", "Id no information."));
+		}
+		
+		if(StringUtils.isBlank(status)) {
+			result.addError(new ObjectError("Ticket","Status no information."));
+		}
+	}
 }
