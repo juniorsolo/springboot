@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.mongodb.core.aggregation.AccumulatorOperators.Sum;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.junior.helpdesk.api.dto.Summary;
 import com.junior.helpdesk.api.entity.ChangeStatus;
 import com.junior.helpdesk.api.entity.Ticket;
 import com.junior.helpdesk.api.entity.User;
@@ -326,5 +328,53 @@ public class TicketController {
 		if(StringUtils.isBlank(status)) {
 			result.addError(new ObjectError("Ticket","Status no information."));
 		}
+	}
+	
+	@GetMapping("/summary")
+	public ResponseEntity<Response<Summary>> findSummary(){
+		Response<Summary> response = new Response<>();
+		Summary summary = new Summary();
+		
+		int amountNew = 0;
+		int amountResolved = 0;
+		int amountApproved = 0;
+		int amountDisaproved = 0;
+		int amountAssigned = 0;
+		int amountClosed = 0;
+		
+		Iterable<Ticket> tickets = ticketService.findAll();
+		
+		if(tickets != null) {
+			for (Ticket ticket : tickets) {
+				
+				if(ticket.getStatus().equals(StatusEnum.New)) {
+					amountNew++;
+				}
+				if(ticket.getStatus().equals(StatusEnum.Approved)) {
+					amountApproved++;
+				}
+				if(ticket.getStatus().equals(StatusEnum.Assigned)) {
+					amountAssigned++;
+				}
+				if(ticket.getStatus().equals(StatusEnum.Closed)) {
+					amountClosed++;
+				}
+				if(ticket.getStatus().equals(StatusEnum.Disapproved)) {
+					amountDisaproved++;
+				}
+				if(ticket.getStatus().equals(StatusEnum.Resolved)) {
+					amountResolved++;
+				}
+			}
+		}
+		summary.setAmountApproved(amountApproved);
+		summary.setAmountAssigned(amountAssigned);
+		summary.setAmountClosed(amountClosed);
+		summary.setAmountDisaproved(amountDisaproved);
+		summary.setAmountNew(amountNew);
+		summary.setAmountResolved(amountResolved);
+		
+		response.setData(summary);
+		return ResponseEntity.ok(response);
 	}
 }
