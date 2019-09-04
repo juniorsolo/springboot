@@ -63,7 +63,7 @@ public class TicketServiceImpl implements TicketService{
 	@Override
 	public Page<Ticket> findByParameters(int page, int count, String title, String status, String priority) {
 		Pageable pages = new PageRequest(page, count);
-		return this.ticketRepository.findByTitleIgnoreCaseContainingAndStatusAndPriorityAndAssignedUserIdOrderByDateDesc(title, status, priority, pages);
+		return this.ticketRepository.findByTitleIgnoreCaseContainingAndStatusAndPriorityOrderByDateDesc(title, status, priority,pages);
 	}
 	@Override
 	public Page<Ticket> findByParametersAndCurrentUser(int page, int count, String title, String status,
@@ -88,7 +88,7 @@ public class TicketServiceImpl implements TicketService{
 	public Page<Ticket> findByParametersAndAssignedUser(int page, int count, String title, String status,
 			String priority, String assignedUser) {
 		Pageable pages = new PageRequest(page, count);
-		return this.ticketRepository.findByTitleIgnoreCaseContainingAndStatusAndPriorityAndAssignedUserIdOrderByDateDesc(title, status, priority, pages);
+		return this.ticketRepository.findByTitleIgnoreCaseContainingAndStatusAndPriorityAndAssignedUserIdOrderByDateDesc(title, status, priority,assignedUser, pages);
 	}
 
 }
