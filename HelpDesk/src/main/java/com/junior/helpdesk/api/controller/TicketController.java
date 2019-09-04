@@ -235,13 +235,13 @@ public class TicketController {
 		return ResponseEntity.ok(response);
 	}
 	
-	@GetMapping(value="{page}/{count}/{number}/{title}/{status}/{priority}") ///{assigned}"
+	@GetMapping(value="{page}/{count}/{number}/{title}/{status}/{assigned}") 
 	@PreAuthorize("hasAnyRole('CUSTOMER','TECHNICIAN')")
 	public ResponseEntity<Response<Page<Ticket>>> findByParams(HttpServletRequest request, 
 			@PathVariable("page") int page, @PathVariable("count") int count,
 			@PathVariable("number") Integer number, @PathVariable("title") String title,
-			@PathVariable("status") String status, @PathVariable("priority") String priority//,
-			/*@PathVariable("assigned") boolean assigned*/){
+			@PathVariable("status") String status, @PathVariable("priority") String priority,
+			@PathVariable("assigned") boolean assigned){
 		
 		Response<Page<Ticket>> response = new Response<>();
 		Page<Ticket> tickets = null;
@@ -258,11 +258,11 @@ public class TicketController {
 				User userRequest = userFromRequest(request);
 				
 				if(userRequest.getProfile().equals(ProfileEnum.ROLE_TECHNICIAN)) {
-					//if(assigned) {
-						//tickets = ticketService.findByParametersAndAssignedUser(page, count, title, status, priority, userRequest.getId());
-					//}else {
+					if(assigned) {
+						tickets = ticketService.findByParametersAndAssignedUser(page, count, title, status, priority, userRequest.getId());
+					}else {
 						tickets = ticketService.findByParameters(page, count, title, status, priority);
-					//}
+					}
 				} else if(userRequest.getProfile().equals(ProfileEnum.ROLE_CUSTOMER)) {
 					tickets = ticketService.findByParametersAndCurrentUser(page, count, title, status, priority, userRequest.getId());
 				}
@@ -276,10 +276,14 @@ public class TicketController {
 		return ResponseEntity.ok(response);
 	}
 	
-	@PutMapping(value="/{id}/{status}")
+	@PutMapping(value="{id}/{status}")
 	@PreAuthorize("hasAnyRole('CUSTOMER','TECHNICIAN')")
-	public ResponseEntity<Response<Ticket>> changeStatus(HttpServletRequest request, @PathVariable("id") String id,
-			@PathVariable("status") String status, BindingResult result){
+	public ResponseEntity<Response<Ticket>> changeStatus( 
+			@PathVariable("id") String id,
+			@PathVariable("status") String status, 
+			HttpServletRequest request,
+			@RequestBody Ticket ticket, 
+			BindingResult result){
 		
 		Response<Ticket> response = new Response<>();
 		
