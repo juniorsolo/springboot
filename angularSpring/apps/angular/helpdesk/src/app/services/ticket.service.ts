@@ -12,6 +12,12 @@ export class TicketService {
   constructor(private http:HttpClient) { }
 
   createOrUpdate(ticket: Ticket){
-    
+    if(ticket.id != null && ticket.id != ''){
+      return this.http.put(`${HELP_DESK_API}/api/ticket`,ticket);
+    }else{
+      ticket.id = null;
+      ticket.status = "New";
+      return this.http.post(`${HELP_DESK_API}/api/ticket`,ticket);
+    }
   }
 }
