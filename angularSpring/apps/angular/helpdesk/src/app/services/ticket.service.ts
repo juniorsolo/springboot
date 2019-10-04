@@ -20,4 +20,34 @@ export class TicketService {
       return this.http.post(`${HELP_DESK_API}/api/ticket`,ticket);
     }
   }
+
+  findAll(page: number, count: number){
+    return this.http.get(`${HELP_DESK_API}/api/ticket/${page}/${count}`);
+  }
+
+  findById(id: string){
+    return this.http.get(`${HELP_DESK_API}/api/ticket/${id}`);
+  }
+
+  delete(id: string){
+    return this.http.delete(`${HELP_DESK_API}/api/ticket/${id}`);
+  }
+
+  findByParams(page: number, count: number, assignedToMe: boolean, ticket: Ticket){
+    ticket.number = ticket.number == null ? 0 : ticket.number;
+    ticket.title = ticket.title == '' ? "uninfomed" : ticket.title;
+    ticket.status = ticket.status == '' ? "uninfomed" : ticket.status;
+    ticket.priority = ticket.priority == '' ? "uninfomed" : ticket.priority;
+
+    return this.http.get(`${HELP_DESK_API}/api/ticket/${page}/${count}/${ticket.number}/${ticket.title}/${ticket.status}/${ticket.priority}/${assignedToMe}`);
+
+  }
+
+  changeStatus(status:string, ticket: Ticket){
+    return this.http.put(`${HELP_DESK_API}/api/ticket/${ticket.id}/${ticket.status}`, status);
+  }
+
+  summary(){
+    return this.http.get(`${HELP_DESK_API}/api/ticket/summary`);
+  }
 }
