@@ -10,8 +10,9 @@ import { LoginComponent } from './components/security/login/login.component';
 import { routes } from './app.routes';
 import { UserService } from './services/user.service';
 import { SharedService } from './services/shared.service';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { AuthInterceptor } from './components/security/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -26,9 +27,17 @@ import { FormsModule } from '@angular/forms';
     BrowserModule,
     FormsModule,
     HttpClientModule,
-    routes
+    routes   
   ],
-  providers: [UserService, SharedService],
+  providers: [UserService, 
+              SharedService,
+              //declarando interceptor
+              {
+                provide : HTTP_INTERCEPTORS,
+                useClass: AuthInterceptor,
+                multi: true
+              }
+            ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
