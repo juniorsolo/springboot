@@ -15,7 +15,7 @@
                                [(ngModel)]="user.email"
                                class="form-control" 
                                id="inputEmail" 
-                               name="password" 
+                               name="email" 
                                #email="ngModel"
                                placeholder="Email"  
                                > 
@@ -34,7 +34,7 @@
                                #password="ngModel"
                                placeholder="Password" 
                                required>
-                        <span class="help-block" *ngIf="email.invalid && email.dirty">Password id invalid</span>
+                        <span class="help-block" *ngIf="password.invalid && password.dirty">Password id invalid</span>
                     </div>
                 </div>
                 
