@@ -5,9 +5,9 @@ import { ModuleWithProviders } from '@angular/core';
 import { AuthGuard } from './components/security/auth.guard';
 
 export const ROUTES: Routes = [
-    { path : '', component: HomeComponent},
+    { path : '', component: HomeComponent,canActivate: [AuthGuard]},
     { path : 'login', component: LoginComponent},
-    { path : 'home', component: HomeComponent}
+    { path : 'home', component: HomeComponent, canActivate: [AuthGuard]}
 ]
 
 export const routes: ModuleWithProviders = RouterModule.forRoot(ROUTES);
