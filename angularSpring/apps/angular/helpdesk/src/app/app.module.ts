@@ -33,12 +33,8 @@ import { AuthGuard } from './components/security/auth.guard';
   providers: [UserService, 
               SharedService,
               AuthGuard,
-              //declarando interceptor
-              {
-                provide : HTTP_INTERCEPTORS,
-                useClass: AuthInterceptor,
-                multi: true
-              }
+              AuthInterceptor
+             
             ],
   bootstrap: [AppComponent]
 })

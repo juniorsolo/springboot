@@ -3,7 +3,9 @@ import { Observable } from 'rxjs';
 import { SharedService } from 'src/app/services/shared.service';
 import { Injectable } from '@angular/core';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+  })
 export class  AuthInterceptor implements HttpInterceptor{
 
     shared: SharedService;
