@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { Component, OnInit, ViewChild, ViewChildren } from '@angular/core';
+import { FormBuilder,FormGroup } from '@angular/forms';
 import { User } from 'src/app/model/user.model';
 import { SharedService } from 'src/app/services/shared.service';
 import { UserService } from 'src/app/services/user.service';
@@ -13,8 +13,8 @@ import { ResponseApi } from 'src/app/model/response.api';
 })
 export class UserNewComponent implements OnInit {
 
-  @ViewChild("form")
-  form: NgForm
+  
+  contactForm: FormGroup;
 
   user = new User('','','','');
   shared : SharedService;
@@ -23,13 +23,24 @@ export class UserNewComponent implements OnInit {
 
   constructor(
     private userSevice: UserService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private formBuilder: FormBuilder
   ) { 
     this.shared = SharedService.getInstance();
+    this.createContactForm();
+  }
+  createContactForm(){
+    this.contactForm = this.formBuilder.group({
+      password: [''],  
+      email: [''],
+      profile: [''],
+      message: ['']
+    });
+    console.log("construido form: " + this.contactForm);
   }
 
   ngOnInit() {
-    let id: string = this.route.snapshot.params('id');
+    let id: string = this.route.snapshot.params.id;
     if(id != undefined){
       this.findById(id);
     }
@@ -48,10 +59,18 @@ export class UserNewComponent implements OnInit {
   }
   register(){
     this.message = {};
+    console.log(this.contactForm.value.email);
+    console.log(this.contactForm.value.password);
+    console.log(this.contactForm.value.profile);
+    
+    this.user.email = this.contactForm.value.email;
+    this.user.password = this.contactForm.value.password;
+    this.user.profile = this.contactForm.value.profile;
+
     this.userSevice.createOrUpdate(this.user).subscribe((responseApi: ResponseApi) => {
       this.user = new User('','','','');
       let userRet : User = responseApi.data;
-      this.form.resetForm();
+      this.createContactForm();
       this.showMessage({
         type:'success',
         text: `Registered ${userRet.email} successfully`
@@ -78,7 +97,7 @@ export class UserNewComponent implements OnInit {
     this.classCss['alert-'+type] = true;
   }
 
-  getFromGroupClass(isInvalid: boolean, isDirty){
+  getFromGroupClass(isInvalid: boolean, isDirty):{} {
     return{
       'form-group' : true,
       'has-error' : isInvalid && isDirty,

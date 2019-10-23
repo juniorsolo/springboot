@@ -31,6 +31,7 @@ export class LoginComponent implements OnInit {
     this.message ='';
     this.userService.login(this.user).subscribe((userAuthentication: CurrentUser) =>{
        this.shared.token = userAuthentication.token;
+       console.log("methodo login token: " + userAuthentication.token);
        this.shared.user = userAuthentication.user;
        this.shared.user.profile = this.shared.user.profile.substring(5);
        this.shared.showTemplate.emit(true);

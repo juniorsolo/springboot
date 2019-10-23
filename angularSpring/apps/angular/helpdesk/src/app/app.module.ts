@@ -11,7 +11,7 @@ import { routes } from './app.routes';
 import { UserService } from './services/user.service';
 import { SharedService } from './services/shared.service';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule,ReactiveFormsModule } from '@angular/forms';
 import { AuthInterceptor } from './components/security/auth.interceptor';
 import { AuthGuard } from './components/security/auth.guard';
 import { UserNewComponent } from './components/user-new/user-new.component';
@@ -29,6 +29,7 @@ import { UserNewComponent } from './components/user-new/user-new.component';
   imports: [
     BrowserModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpClientModule,
     routes   
   ],

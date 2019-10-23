@@ -15,6 +15,7 @@ export class UserService {
   }
 
   createOrUpdate(user:User){
+    console.log("create or update:.. " + user.email);
     if(user.id != null && user.id != ''){
       return this.http.put(`${HELP_DESK_API}/api/user`, user);
     }else {

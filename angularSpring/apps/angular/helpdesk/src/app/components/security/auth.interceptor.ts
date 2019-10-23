@@ -8,15 +8,15 @@ import { Injectable } from '@angular/core';
   })
 export class  AuthInterceptor implements HttpInterceptor{
 
-    shared: SharedService;
-
+    
+    constructor(private shared: SharedService) { }
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         let authRequest : any;
-
+        console.log("authInterceptor: "+ this.shared.isLoggedIn() + "  token: " + this.shared.token );
         if(this.shared.isLoggedIn()){
             authRequest = req.clone({
                 setHeaders:{
-                    'Authorization':this.shared.token
+                    Authorization :this.shared.token
                 }
             });
             return next.handle(authRequest);
