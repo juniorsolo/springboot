@@ -36,7 +36,7 @@ import { UserNewComponent } from './components/user-new/user-new.component';
   providers: [UserService, 
               SharedService,
               AuthGuard,
-              AuthInterceptor
+              {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
              
             ],
   bootstrap: [AppComponent]

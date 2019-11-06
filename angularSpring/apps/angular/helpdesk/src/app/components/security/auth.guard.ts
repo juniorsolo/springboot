@@ -3,7 +3,7 @@ import { SharedService } from 'src/app/services/shared.service';
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 
-@Injectable()
+@Injectable({providedIn:'root'})
 export class AuthGuard implements CanActivate{
 
     public shared: SharedService;
@@ -14,6 +14,7 @@ export class AuthGuard implements CanActivate{
 
     canActivate(route: ActivatedRouteSnapshot, 
                 state: RouterStateSnapshot): Observable<boolean> | boolean {
+                    console.log("AuthGuard canActivate: " + this.shared.isLoggedIn());
                 if(this.shared.isLoggedIn()){
                     return true;
                 }
