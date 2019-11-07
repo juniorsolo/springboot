@@ -4,7 +4,9 @@
             <h3 class="box-title">New User</h3>
         </div>
         <form [formGroup]="contactForm" (ngSubmit)="register()" class="form-horizontal" >
-            
+            <div [ngClass]="classCss" role="alert" *ngIf="message">
+                <strong> {{ message.text }} </strong>
+            </div>
             <div class="box-body">
                 <div >
                     <label for="inputEmail" class="col-sm-3 control-label">Email</label>

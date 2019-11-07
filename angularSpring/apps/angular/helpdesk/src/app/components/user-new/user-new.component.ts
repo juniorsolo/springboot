@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ViewChildren } from '@angular/core';
-import { FormBuilder,FormGroup } from '@angular/forms';
+import { FormBuilder,FormGroup, Validators } from '@angular/forms';
 import { User } from 'src/app/model/user.model';
 import { SharedService } from 'src/app/services/shared.service';
 import { UserService } from 'src/app/services/user.service';
@@ -31,9 +31,9 @@ export class UserNewComponent implements OnInit {
   }
   createContactForm(){
     this.contactForm = this.formBuilder.group({
-      password: [''],  
-      email: [''],
-      profile: [''],
+      password: ['', [Validators.required, Validators.minLength(3)]],  
+      email: ['', Validators.required ],
+      profile: ['', Validators.required],
       message: ['']
     });
     console.log("construido form: " + this.contactForm);
@@ -59,13 +59,15 @@ export class UserNewComponent implements OnInit {
   }
   register(){
     this.message = {};
-    console.log(this.contactForm.value.email);
-    console.log(this.contactForm.value.password);
-    console.log(this.contactForm.value.profile);
     
     this.user.email = this.contactForm.value.email;
     this.user.password = this.contactForm.value.password;
     this.user.profile = this.contactForm.value.profile;
+
+    if(this.contactForm.invalid){
+      
+        return ;
+    }
 
     this.userSevice.createOrUpdate(this.user).subscribe((responseApi: ResponseApi) => {
       this.user = new User('','','','');
@@ -78,7 +80,7 @@ export class UserNewComponent implements OnInit {
       },err =>{
         this.showMessage({
           type: 'error',
-          text: err['error']['errors']
+          text: err['error']['erros'][0]
         });
       });
   }
