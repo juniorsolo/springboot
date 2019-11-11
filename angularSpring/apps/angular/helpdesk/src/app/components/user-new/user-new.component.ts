@@ -15,6 +15,7 @@ export class UserNewComponent implements OnInit {
 
   
   contactForm: FormGroup;
+  submitted = false;
 
   user = new User('','','','');
   shared : SharedService;
@@ -36,7 +37,7 @@ export class UserNewComponent implements OnInit {
       profile: ['', Validators.required],
       message: ['']
     });
-    console.log("construido form: " + this.contactForm);
+    console.log("construido form: " + this.contactForm.errors);
   }
 
   ngOnInit() {
@@ -45,6 +46,7 @@ export class UserNewComponent implements OnInit {
       this.findById(id);
     }
   }
+  get f() { return this.contactForm.controls; }
 
   findById(id: string){
     this.userSevice.findById(id).subscribe((responseApi : ResponseApi) => {
@@ -63,7 +65,7 @@ export class UserNewComponent implements OnInit {
     this.user.email = this.contactForm.value.email;
     this.user.password = this.contactForm.value.password;
     this.user.profile = this.contactForm.value.profile;
-
+    this.submitted = true;
     if(this.contactForm.invalid){
       
         return ;
@@ -77,6 +79,7 @@ export class UserNewComponent implements OnInit {
         type:'success',
         text: `Registered ${userRet.email} successfully`
        });
+       this.submitted = true;
       },err =>{
         this.showMessage({
           type: 'error',

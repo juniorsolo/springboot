@@ -14,12 +14,16 @@
                         <input type="email" 
                                formControlName="email"
                                class="form-control" 
+                               [ngClass]="{ 'is-invalid': submitted && f.email.errors }" 
                                id="inputEmail" 
                                name="email" 
                                ngModel 
                                placeholder="Email"  
                                > 
-                        <!--<span class="help-block" *ngIf="email.invalid && email.dirty">Email is invalid</span>-->
+                        <div *ngIf="submitted && f.email.errors" class="errorField">
+                            <div *ngIf="f.email.errors.required">Email is required</div>
+                        </div>
+                        
                     </div>
                 </div>
 
@@ -29,12 +33,16 @@
                         <input type="password"
                                formControlName="password"
                                class="form-control" 
+                               [ngClass]="{ 'is-invalid': submitted && f.password.errors }"
                                id="inputPassword" 
                                name="password"
                                ngModel 
                                placeholder="Password" 
                                required>
-                        <!--<span class="help-block" *ngIf="password.invalid && password.dirty">Password id invalid</span>-->
+                        <div *ngIf="submitted && f.password.errors" class="errorField">
+                            <div *ngIf="f.password.errors.required">Password is required</div>
+                        </div>
+                        
                     </div>
                 </div>
 
@@ -43,6 +51,7 @@
                     <div class="col-sm-9">
                         <select formControlName="profile" 
                                class="form-control select2" 
+                               [ngClass]="{ 'is-invalid': submitted && f.profile.errors }"
                                id="inputProfile" 
                                name="profile" 
                                ngModel  
@@ -52,7 +61,9 @@
                                <option>ROLE_CUSTOMER</option>
                                <option>ROLE_TECHNICIAN</option>
                         </select>
-                        <!--<span class="help-block" *ngIf="profile.invalid && profile.dirty">Profile id invalid</span>-->
+                    <div *ngIf="submitted && f.profile.errors" class="errorField">
+                        <div *ngIf="f.profile.errors.required">Profile is required</div>
+                    </div>
                         
                     </div>
                 </div>
