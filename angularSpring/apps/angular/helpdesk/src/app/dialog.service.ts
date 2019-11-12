@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class DialogService{
     
-    confirm(message: string){
+    confirm(message?: string){
         return new Promise(resolve => {
-            return resolve(window.confirm(message || 'Confirm ?'))
+            return resolve(window.confirm(message || 'Confirm ?'));
         })
     }
 }
