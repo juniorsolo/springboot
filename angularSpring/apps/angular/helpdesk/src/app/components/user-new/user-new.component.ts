@@ -79,7 +79,7 @@ export class UserNewComponent implements OnInit {
         type:'success',
         text: `Registered ${userRet.email} successfully`
        });
-       this.submitted = true;
+       this.onReset();
       },err =>{
         this.showMessage({
           type: 'error',
@@ -101,12 +101,16 @@ export class UserNewComponent implements OnInit {
     }
     this.classCss['alert-'+type] = true;
   }
-
+  onReset() {
+    this.submitted = false;
+    this.contactForm.reset();
+}
+/*
   getFromGroupClass(isInvalid: boolean, isDirty):{} {
     return{
       'form-group' : true,
       'has-error' : isInvalid && isDirty,
       'has-success' : !isInvalid && isDirty
     }
-  }
+  } */
 }

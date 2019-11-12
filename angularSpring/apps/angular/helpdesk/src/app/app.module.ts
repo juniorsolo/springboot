@@ -15,6 +15,7 @@ import { FormsModule,ReactiveFormsModule } from '@angular/forms';
 import { AuthInterceptor } from './components/security/auth.interceptor';
 import { AuthGuard } from './components/security/auth.guard';
 import { UserNewComponent } from './components/user-new/user-new.component';
+import { UserListComponent } from './components/user-list/user-list.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { UserNewComponent } from './components/user-new/user-new.component';
     FooterComponent,
     HomeComponent,
     LoginComponent,
-    UserNewComponent
+    UserNewComponent,
+    UserListComponent
   ],
   imports: [
     BrowserModule,
