@@ -35,7 +35,7 @@ export class UserListComponent implements OnInit {
   findAll(page: number, count: number){
     this.userService.findAll(page,count).subscribe((reponseApi : ResponseApi) => {
       this.listUser = reponseApi['data']['content'];
-      this.pages = new Array(ResponseApi['data']['totalPages']);
+      this.pages = new Array(reponseApi['data']['totalPages']);
     }, err => {
       this.showMessage({
         type: 'error',
@@ -75,6 +75,21 @@ export class UserListComponent implements OnInit {
       this.page = this.page + 1;
       this.findAll(this.page, this.count);
     }
+  }
+
+  setPreviousPage(event: any){
+    event.preventDefault();
+    if(this.page > 0){
+      this.page = this.page - 1;
+      this.findAll(this.page, this.count);
+    }
+  }
+
+  setPage(i, event : any){
+    event.preventDefault();
+    this.page = i;
+    this.findAll(this.page, this.count);
+
   }
 
   private showMessage(message:{type: string, text: string}) : void {

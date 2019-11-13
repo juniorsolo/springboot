@@ -41,7 +41,9 @@ export class UserNewComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log("passando pelo ngOnInit...");
     let id: string = this.route.snapshot.params.id;
+    console.log(" ngOnInit... id:" + id);
     if(id != undefined){
       this.findById(id);
     }
@@ -50,8 +52,11 @@ export class UserNewComponent implements OnInit {
 
   findById(id: string){
     this.userSevice.findById(id).subscribe((responseApi : ResponseApi) => {
-      this.user = responseApi.data;
-      this.user.password = ''; //clear password
+      this.contactForm.patchValue({
+        email: responseApi.data.email,
+        profile: responseApi.data.profile
+      });
+  
     }, err =>{
         this.showMessage({
           type: 'error',
