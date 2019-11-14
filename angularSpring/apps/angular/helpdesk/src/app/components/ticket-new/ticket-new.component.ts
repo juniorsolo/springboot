@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { SharedService } from 'src/app/services/shared.service';
 import { ActivatedRoute } from '@angular/router';
+import { TicketService } from 'src/app/services/ticket.service';
+import { ResponseApi } from 'src/app/model/response.api';
+import { Ticket } from 'src/app/model/ticket.model';
 
 @Component({
   selector: 'app-ticket-new',
@@ -18,6 +21,7 @@ export class TicketNewComponent implements OnInit {
   classCss : {};
 
   constructor(
+    private ticketService : TicketService,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder
     ) { 
@@ -25,31 +29,132 @@ export class TicketNewComponent implements OnInit {
       this.createTicketForm();
     }
 
-    createTicketForm() {
-      this.ticketForm = this.formBuilder.group({
+  createTicketForm() {
+    this.ticketForm = this.formBuilder.group({
+      id: [''],
+      number: [0],
+      title: [''],
+      status: [''],
+      priority: [''],
+      imagem: [''],
+      user: this.formBuilder.group({
         id: [''],
-        number: [0],
-        title: [''],
-        status: [''],
-        priority: [''],
-        imagem: [''],
-        user: new FormGroup({
-          id: new FormControl(''),
-          email: new FormControl(''),
-          password: new FormControl(''),
-          profile: new FormControl('')
-        }),
-        assignedUser: new FormGroup({
-          id: new FormControl(''),
-          email: new FormControl(''),
-          password: new FormControl(''),
-          profile: new FormControl('')
-        }),
-        data: [''],
-        changes: [{}]
-      });
-    }
-  ngOnInit() {
+        email: [''],
+        password: [''],
+        profile: ['']
+      }),
+      assignedUser: this.formBuilder.group({
+        id: [''],
+        email: [''],
+        password: [''],
+        profile: ['']
+      }),
+      data: [''],
+      changes: [{}]
+    });
   }
 
+  ngOnInit() {
+    let id : string = this.route.snapshot.params['id'];
+    console.log('ngOnInit com id : ' + id);
+    if(id != undefined){
+      this.findById(id);
+    }
+  }
+
+  findById(id : string){
+    this.ticketService.findById(id).subscribe((responseApi : ResponseApi) => {
+        this.ticketForm.patchValue({
+          id: responseApi.data.id,
+          number: responseApi.data.number,
+          title: responseApi.data.title,
+          status: responseApi.data.status,
+          priority: responseApi.data.priority,
+          imagem: responseApi.data.imagem,
+          user: this.formBuilder.group({
+            id: responseApi.data.user.id,
+            email: responseApi.data.user.email,
+            password: responseApi.data.user.password,
+            profile: responseApi.data.user.profile
+          }),
+          assignedUser: this.formBuilder.group({
+            id: responseApi.data.assignedUser.id,
+            email: responseApi.data.assignedUser.email,
+            password: responseApi.data.assignedUser.password,
+            profile: responseApi.data.assignedUser.profile
+          }),
+          data: responseApi.data.data,
+          changes: responseApi.data.changes
+        });
+    }, err => {
+      this.showMessage({
+        type: 'error',
+        text: err['error']['errors'][0]
+      });
+    });
+  }
+  
+  register(){
+    this.message = {};
+    
+    //this.user.email = this.contactForm.value.email;
+    //this.user.password = this.contactForm.value.password;
+    //this.user.profile = this.contactForm.value.profile;
+    this.submitted = true;
+    if(this.ticketForm.invalid){ 
+        return ;
+    }
+
+    this.ticketService.createOrUpdate(this.ticketForm.value).subscribe((responseApi: ResponseApi) => {
+      this.onReset();
+      let ticketRet : Ticket = responseApi.data;
+      this.createTicketForm();
+      this.showMessage({
+        type:'success',
+        text: `Registered ticket number: ${ticketRet.number} with success`
+       });
+       
+      },err =>{
+        this.showMessage({
+          type: 'error',
+          text: err['error']['erros'][0]
+        });
+      });
+  }
+
+  onFileChange(event): void {
+    if(event.target.files[0].size > 2000000){
+      this.showMessage({
+        type: 'error',
+        text: 'Maximun image size is 2 MB.'
+      })
+    } else{
+      this.ticketForm.value.imagem = '';
+      var reader = new FileReader();
+      reader.onloadend = (e : Event) =>{
+        this.ticketForm.value.imagem = reader.result;
+      }
+      reader.readAsDataURL(event.target.files[0]);
+    }
+  }
+
+  private showMessage(message:{type: string, text: string}) : void {
+    this.message = message;
+    this.buildClasses(message.type);
+    setTimeout(() => {
+      this.message = undefined;
+    }, 3000);
+  }
+
+  private buildClasses(type: string): void {
+    this.classCss = {
+      'alert' : true
+    }
+    this.classCss['alert-'+type] = true;
+  }
+
+  onReset() {
+    this.submitted = false;
+    this.ticketForm.reset();
+  }
 }
