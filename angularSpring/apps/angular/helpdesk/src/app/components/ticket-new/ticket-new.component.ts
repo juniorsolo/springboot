@@ -19,6 +19,8 @@ export class TicketNewComponent implements OnInit {
   submitted = false;
   message: {};
   classCss : {};
+  imageURL : string;
+
 
   constructor(
     private ticketService : TicketService,
@@ -34,6 +36,7 @@ export class TicketNewComponent implements OnInit {
       id: [''],
       number: [0],
       title: [''],
+      description: [''],
       status: [''],
       priority: [''],
       imagem: [''],
@@ -68,6 +71,7 @@ export class TicketNewComponent implements OnInit {
           id: responseApi.data.id,
           number: responseApi.data.number,
           title: responseApi.data.title,
+          description : responseApi.data.description,
           status: responseApi.data.status,
           priority: responseApi.data.priority,
           imagem: responseApi.data.imagem,
@@ -97,9 +101,6 @@ export class TicketNewComponent implements OnInit {
   register(){
     this.message = {};
     
-    //this.user.email = this.contactForm.value.email;
-    //this.user.password = this.contactForm.value.password;
-    //this.user.profile = this.contactForm.value.profile;
     this.submitted = true;
     if(this.ticketForm.invalid){ 
         return ;
@@ -129,10 +130,15 @@ export class TicketNewComponent implements OnInit {
         text: 'Maximun image size is 2 MB.'
       })
     } else{
-      this.ticketForm.value.imagem = '';
+     // this.ticketForm.controls.imagem.setValue( '');
       var reader = new FileReader();
-      reader.onloadend = (e : Event) =>{
-        this.ticketForm.value.imagem = reader.result;
+       reader.onloadend = (event) => {
+         //Preenchendo form control com a imagem
+        this.ticketForm.patchValue({
+          imagem: reader.result,         
+        });
+        //Adicionando URL para o SRC na tela.
+        this.imageURL = reader.result as string;
       }
       reader.readAsDataURL(event.target.files[0]);
     }
@@ -157,4 +163,6 @@ export class TicketNewComponent implements OnInit {
     this.submitted = false;
     this.ticketForm.reset();
   }
+
+  get f() { return this.ticketForm.controls; }
 }
