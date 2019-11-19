@@ -27,17 +27,17 @@ public class HelpDeskApplication {
 	private void initUsers(UserRepository userRepository, PasswordEncoder passwordEncoder) {
 		User admin = new User();
 		admin.setEmail("admin@helpdesk.com");
-		admin.setPassword(passwordEncoder.encode("123456"));
+		admin.setPassword(passwordEncoder.encode("123"));
 		admin.setProfile(ProfileEnum.ROLE_ADMIN);
 		
 		User technician = new User();
 		technician.setEmail("technician@test.com");
-		technician.setPassword(passwordEncoder.encode("123456"));
+		technician.setPassword(passwordEncoder.encode("123"));
 		technician.setProfile(ProfileEnum.ROLE_TECHNICIAN);
 		
 		User customer = new User();
 		customer.setEmail("customer@test.com");
-		customer.setPassword(passwordEncoder.encode("123456"));
+		customer.setPassword(passwordEncoder.encode("123"));
 		customer.setProfile(ProfileEnum.ROLE_CUSTOMER);
 		
 		User find = userRepository.findByEmail("admin@helpdesk.com");
