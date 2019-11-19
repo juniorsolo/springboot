@@ -39,7 +39,7 @@ export class UserListComponent implements OnInit {
     }, err => {
       this.showMessage({
         type: 'error',
-        text: err['error']['erros'][0]
+        text: err['error']['error']
       });
     });
   }

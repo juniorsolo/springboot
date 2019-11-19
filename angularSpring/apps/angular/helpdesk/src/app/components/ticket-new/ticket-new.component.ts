@@ -39,8 +39,8 @@ export class TicketNewComponent implements OnInit {
       description: [''],
       status: [''],
       priority: [''],
-      imagem: [''],
-      user: this.formBuilder.group({
+      image: ['']
+      /*user: this.formBuilder.group({
         id: [''],
         email: [''],
         password: [''],
@@ -51,9 +51,9 @@ export class TicketNewComponent implements OnInit {
         email: [''],
         password: [''],
         profile: ['']
-      }),
-      data: [''],
-      changes: [{}]
+      }),*/
+      //data: [''],
+      //changes: [{}]
     });
   }
 
@@ -74,8 +74,8 @@ export class TicketNewComponent implements OnInit {
           description : responseApi.data.description,
           status: responseApi.data.status,
           priority: responseApi.data.priority,
-          imagem: responseApi.data.imagem,
-          user: this.formBuilder.group({
+          image: responseApi.data.image
+         /* user: this.formBuilder.group({
             id: responseApi.data.user.id,
             email: responseApi.data.user.email,
             password: responseApi.data.user.password,
@@ -86,9 +86,9 @@ export class TicketNewComponent implements OnInit {
             email: responseApi.data.assignedUser.email,
             password: responseApi.data.assignedUser.password,
             profile: responseApi.data.assignedUser.profile
-          }),
-          data: responseApi.data.data,
-          changes: responseApi.data.changes
+          }),*/
+         // data: responseApi.data.data,
+         // changes: responseApi.data.changes
         });
     }, err => {
       this.showMessage({
@@ -118,7 +118,7 @@ export class TicketNewComponent implements OnInit {
       },err =>{
         this.showMessage({
           type: 'error',
-          text: err['error']['erros'][0]
+          text: err['error']['message']
         });
       });
   }
@@ -135,7 +135,7 @@ export class TicketNewComponent implements OnInit {
        reader.onloadend = (event) => {
          //Preenchendo form control com a imagem
         this.ticketForm.patchValue({
-          imagem: reader.result,         
+          image: reader.result,         
         });
         //Adicionando URL para o SRC na tela.
         this.imageURL = reader.result as string;
@@ -161,6 +161,7 @@ export class TicketNewComponent implements OnInit {
 
   onReset() {
     this.submitted = false;
+    this.imageURL='';
     this.ticketForm.reset();
   }
 
