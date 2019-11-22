@@ -1,1 +1,58 @@
-<p>ticket-list works!</p>
+<div [ngClass]="classCss" role="alert" *ngIf="message" style="width: 49%;">
+    <strong> {{ message.text }} </strong>
+</div>
+<div class="row">
+<div class="col-md-6">
+    <div class="box">
+    <div class="box-header with-border" style="text-align: center;">
+        <h3 class="box-title">Ticket List</h3>
+    </div>
+    <div class="box-body">
+        <div class="form-group">
+            <label for="inputTitle" class="col-sm-3 control-label">Title</label>
+            <div class="col-sm-9">
+                <input type="text" 
+                        formControlName="title"
+                        class="form-control" 
+                        [ngClass]="{ 'is-invalid': submitted && f.title.errors }" 
+                        id="inputTitle" 
+                        name="title" 
+                        placeholder="title" 
+                        required
+                        > 
+                <div *ngIf="submitted && f.title.errors" class="errorField">
+                    <div *ngIf="f.title.errors.required">Title is required.</div>
+                </div>                           
+            </div>
+        </div>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body">
+        <table class="table table-bordered">
+        <tr>
+            <th>Email</th>
+            <th>Profile</th>
+            <th style="width: 10px">&nbsp;</th>
+            <th style="width: 10px">&nbsp;</th>
+        </tr>
+        <tr *ngFor="let user of listUser">
+            <td>{{ user.email }}</td>
+            <td>{{ user.profile }}</td>
+            <td style="padding:2px"><button class="btn btn-primary" (click)="edit(user.id)">Edit</button></td>
+            <td style="padding:2px"><button class="btn btn-danger" (click)="delete(user.id)">Delete</button></td>
+        </tr>
+        
+        </table>
+    </div>
+    <!-- /.box-body -->
+    <div class="box-footer clearfix">
+        <ul class="pagination pagination-sm no-margin pull-right">
+            <li><a href="" (click)="setPreviousPage($event)">&laquo;</a></li>
+            <li *ngFor="let p of pages; let i=index">
+                <a href="" [ngClass]="{'pagination-focus' : i == page}" (click)="setPage(i,$event)">{{ i + 1}}</a>
+            </li>
+            <li><a href="" (click)="setNextPage($event)">&raquo;</a></li>
+        </ul>
+    </div>
+</div>
+    

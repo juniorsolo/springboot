@@ -46,6 +46,83 @@ export class TicketListComponent implements OnInit {
     });
   }
 
+  filter() : void {
+    this.page = 0;
+    this.count = 5;
+    this.ticketService.findByParams(this.page, this.count, this.assignedToMe, this.tickeFilter)
+    .subscribe((responsesApi : ResponseApi) => {
+      this.tickeFilter.title = this.tickeFilter.title == 'uninformed' ? '' : this.tickeFilter.title;
+      this.tickeFilter.number = this.tickeFilter.number == 0 ? null : this.tickeFilter.number;
+      this.listTicket = responsesApi['data']['content'];
+      this.pages = new Array(responsesApi['data']['totalPages']);
+    }, err => {
+      this.showMessage({
+        type: 'error',
+        text: err['error']['error']
+      });
+    });
+  }
+
+  clearFilter() : void {
+    this.assignedToMe = false;
+    this.page = 0;
+    this.count = 5;
+    this.tickeFilter = new Ticket('',null,'','','','',null,null,'',null);
+    this.findAll(this.page, this.count);
+  }
+
+  edit(id: string){
+    this.router.navigate(['ticket-new', id]);
+  }
+
+  detail(id: string){
+    this.router.navigate(['/ticket-detail', id]);
+  }
+
+  delete(id: string){
+    this.dialogService.confirm('Do you want to delete the ticket ?')  
+    .then((canDelete:boolean) => {
+      if(canDelete){
+        this.message = {};
+        this.ticketService.delete(id).subscribe((responseApi: ResponseApi) =>{
+          this.showMessage({
+            type:'success',
+            text: 'Record deleted'
+          });
+          this.findAll(this.page,this.count);
+        }, err =>{
+          this.showMessage({
+            type:'error',
+            text: err['error']['erros'][0]
+          })
+        })
+      }
+    })
+  }
+
+  setNextPage(event: any){
+    event.preventDefault();
+    if(this.page + 1 < this.pages.length){
+      this.page = this.page + 1;
+      this.findAll(this.page, this.count);
+    }
+  }
+
+  setPreviousPage(event: any){
+    event.preventDefault();
+    if(this.page > 0){
+      this.page = this.page - 1;
+      this.findAll(this.page, this.count);
+    }
+  }
+
+  setPage(i, event : any){
+    event.preventDefault();
+    this.page = i;
+    this.findAll(this.page, this.count);
+
+  }
+
   private showMessage(message:{type: string, text: string}) : void {
     this.message = message;
     this.buildClasses(message.type);
