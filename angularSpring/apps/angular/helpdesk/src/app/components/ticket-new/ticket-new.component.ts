@@ -75,21 +75,9 @@ export class TicketNewComponent implements OnInit {
           status: responseApi.data.status,
           priority: responseApi.data.priority,
           image: responseApi.data.image
-         /* user: this.formBuilder.group({
-            id: responseApi.data.user.id,
-            email: responseApi.data.user.email,
-            password: responseApi.data.user.password,
-            profile: responseApi.data.user.profile
-          }),
-          assignedUser: this.formBuilder.group({
-            id: responseApi.data.assignedUser.id,
-            email: responseApi.data.assignedUser.email,
-            password: responseApi.data.assignedUser.password,
-            profile: responseApi.data.assignedUser.profile
-          }),*/
-         // data: responseApi.data.data,
-         // changes: responseApi.data.changes
         });
+        // adiciona a imagem para ser apresentada na tela
+        this.imageURL = this.ticketForm.get('image').value;
     }, err => {
       this.showMessage({
         type: 'error',

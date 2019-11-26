@@ -1,4 +1,4 @@
-<div [ngClass]="classCss" role="alert" *ngIf="message" style="width: 49%;">
+<div [ngClass]="classCss" role="alert" *ngIf="message" style="width: 100%;">
     <strong> {{ message.text }} </strong>
 </div>
 <div class="row">
@@ -33,7 +33,7 @@
         <div class="form-group">
             <label for="inputTitle" class="col-sm-2 control-label">Title</label>
             <div class="col-sm-10">
-                <input type="number" 
+                <input type="text" 
                     [(ngModel)]="tickeFilter.title" 
                     class="form-control" 
                     id="inputTitle" 
