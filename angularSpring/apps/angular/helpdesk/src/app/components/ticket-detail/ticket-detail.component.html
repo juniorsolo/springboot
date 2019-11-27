@@ -1,1 +1,24 @@
-<p>ticket-detail works!</p>
+<div class = "col-md-10" style="margin-left: 0%;">
+    <div class="box box-info">
+        <div class= "box-header with-border">
+            <h3>Detail Ticket</h3>
+        </div>
+        <form class="form-horizontal">
+            <div [ngClass]="classCss" role="alert" *ngIf="message">
+                <strong>{{ message.text }}</strong>
+            </div>
+            <div class="box-body">
+                <ul class="list-group list-group-unbordered">
+                    <li class="list-group-item">
+                        <b>Number: </b> <span>{{ ticket.number }}</span>
+                        <span class="pull-right"><b>Title:</b><span>{{ ticket.title }}</span></span>
+                    </li>
+                    <li class="list-group-item">
+                        <b>Priority: </b> <span>{{ ticket.priority }}</span>
+                        <span class="pull-right"><b>Create by:</b><span>{{ ticket?.user?.email }}</span></span>
+                    </li>
+                </ul>
+            </div>
+        </form>
+    </div>
+</div>
