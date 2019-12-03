@@ -40,6 +40,7 @@ public class TicketServiceImpl implements TicketService{
 
 	@Override
 	public Page<Ticket> listTicket(int page, int count) {
+		@SuppressWarnings("deprecation")
 		Pageable pages = new PageRequest(page, count);
 		return this.ticketRepository.findAll(pages);
 	}
@@ -56,18 +57,21 @@ public class TicketServiceImpl implements TicketService{
 
 	@Override
 	public Page<Ticket> findByCurrentUser(int page, int count, String userId) {
+		@SuppressWarnings("deprecation")
 		Pageable pages = new PageRequest(page, count);
 		return this.ticketRepository.findByUserIdOrderByDateDesc(pages, userId);
 	}
 
 	@Override
 	public Page<Ticket> findByParameters(int page, int count, String title, String status, String priority) {
+		@SuppressWarnings("deprecation")
 		Pageable pages = new PageRequest(page, count);
 		return this.ticketRepository.findByTitleIgnoreCaseContainingAndStatusContainingAndPriorityContainingOrderByDateDesc(title, status, priority,pages);
 	}
 	@Override
 	public Page<Ticket> findByParametersAndCurrentUser(int page, int count, String title, String status,
 			String priority, String userId) {
+		@SuppressWarnings("deprecation")
 		Pageable pages = new PageRequest(page, count);
 		return this.ticketRepository.findByTitleIgnoreCaseContainingAndStatusContainingAndPriorityContainingAndUserIdOrderByDateDesc(title, status, priority,userId, pages);
 
@@ -75,6 +79,7 @@ public class TicketServiceImpl implements TicketService{
 
 	@Override
 	public Page<Ticket> findByNumber(int page, int count, Integer number) {
+		@SuppressWarnings("deprecation")
 		Pageable pages = new PageRequest(page, count);
 		return this.ticketRepository.findByNumber(number, pages);
 	}
@@ -87,6 +92,7 @@ public class TicketServiceImpl implements TicketService{
 	@Override
 	public Page<Ticket> findByParametersAndAssignedUser(int page, int count, String title, String status,
 			String priority, String assignedUser) {
+		@SuppressWarnings("deprecation")
 		Pageable pages = new PageRequest(page, count);
 		return this.ticketRepository.findByTitleIgnoreCaseContainingAndStatusContainingAndPriorityContainingAndAssignedUserIdOrderByDateDesc(title, status, priority,assignedUser, pages);
 	}

@@ -40,6 +40,7 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public Page<User> findAll(int page, int count) {
+		@SuppressWarnings("deprecation")
 		Pageable pages = new PageRequest(page, count);	
 		return this.userRepository.findAll(pages);
 	}
