@@ -8,6 +8,7 @@ import { AuthInterceptor } from './components/security/auth.interceptor';
 import { UserListComponent } from './components/user-list/user-list.component';
 import { TicketNewComponent } from './components/ticket-new/ticket-new.component';
 import { TicketListComponent } from './components/ticket-list/ticket-list.component';
+import { TicketDetailComponent } from './components/ticket-detail/ticket-detail.component';
 
 export const ROUTES: Routes = [
     { path : '', component: HomeComponent,canActivate: [AuthGuard]},
@@ -17,7 +18,7 @@ export const ROUTES: Routes = [
     { path : 'user-new/:id', component: UserNewComponent, canActivate: [AuthGuard]},
     { path : 'user-list', component: UserListComponent, canActivate: [AuthGuard]},
     { path : 'ticket-new', component: TicketNewComponent, canActivate: [AuthGuard]},
-    { path : 'ticket-new/:id', component: TicketNewComponent, canActivate: [AuthGuard]},
+    { path : 'ticket-new/:id', component: TicketDetailComponent, canActivate: [AuthGuard]},
     { path : 'ticket-list', component: TicketListComponent, canActivate: [AuthGuard]},
     { path : 'summary', component: TicketListComponent, canActivate: [AuthGuard]}
 ]

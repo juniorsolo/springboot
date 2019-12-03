@@ -3,6 +3,7 @@ import { Ticket } from 'src/app/model/ticket.model';
 import { SharedService } from 'src/app/services/shared.service';
 import { TicketService } from 'src/app/services/ticket.service';
 import { ActivatedRoute } from '@angular/router';
+import { ResponseApi } from 'src/app/model/response.api';
 
 @Component({
   selector: 'app-ticket-detail',
@@ -24,7 +25,42 @@ export class TicketDetailComponent implements OnInit {
   }
 
   ngOnInit() {
+    let id : string  = this.route.snapshot.params['id'];
+
+    if(id != undefined){
+      this.findById(id);
+    }
   }
+
+  findById(id : string){
+    this.ticketService.findById(id).subscribe((responseApi : ResponseApi) => {
+        this.ticket = responseApi.data;
+        this.ticket.date = new Date(this.ticket.date).toISOString();
+        // adiciona a imagem para ser apresentada na tela
+        //this.imageURL = this.ticketForm.get('image').value;
+    }, err => {
+      this.showMessage({
+        type: 'error',
+        text: err['error']['errors'][0]
+      });
+    });
+  }
+
+  private showMessage(message:{type: string, text: string}) : void {
+    this.message = message;
+    this.buildClasses(message.type);
+    setTimeout(() => {
+      this.message = undefined;
+    }, 3000);
+  }
+
+  private buildClasses(type: string): void {
+    this.classCss = {
+      'alert' : true
+    }
+    this.classCss['alert-'+type] = true;
+  }
+
 
   
 }
