@@ -46,6 +46,22 @@ export class TicketDetailComponent implements OnInit {
     });
   }
 
+  changeStatus(status: string) : void{
+    this.ticketService.changeStatus(status, this.ticket).subscribe((responseApi : ResponseApi)=>{
+      this.ticket = responseApi.data;
+      this.ticket.date = new Date(this.ticket.date).toISOString();
+      this.showMessage({
+        type: 'success',
+        text: 'Successfully changed status'
+      });
+    }, err => {
+      this.showMessage({
+        type: 'error',
+        text: err['error']['errors'][0]
+      });
+    });
+  }
+
   private showMessage(message:{type: string, text: string}) : void {
     this.message = message;
     this.buildClasses(message.type);

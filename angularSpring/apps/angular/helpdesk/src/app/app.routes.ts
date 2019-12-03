@@ -18,8 +18,9 @@ export const ROUTES: Routes = [
     { path : 'user-new/:id', component: UserNewComponent, canActivate: [AuthGuard]},
     { path : 'user-list', component: UserListComponent, canActivate: [AuthGuard]},
     { path : 'ticket-new', component: TicketNewComponent, canActivate: [AuthGuard]},
-    { path : 'ticket-new/:id', component: TicketDetailComponent, canActivate: [AuthGuard]},
+    { path : 'ticket-new/:id', component: TicketNewComponent, canActivate: [AuthGuard]},
     { path : 'ticket-list', component: TicketListComponent, canActivate: [AuthGuard]},
+    { path : 'ticket-detail/:id', component: TicketDetailComponent, canActivate: [AuthGuard]},
     { path : 'summary', component: TicketListComponent, canActivate: [AuthGuard]}
 ]
 
