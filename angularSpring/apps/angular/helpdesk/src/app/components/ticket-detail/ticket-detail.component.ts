@@ -57,7 +57,7 @@ export class TicketDetailComponent implements OnInit {
     }, err => {
       this.showMessage({
         type: 'error',
-        text: err['error']['errors'][0]
+        text: err['error']['error']
       });
     });
   }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Ticket } from '../model/ticket.model';
 import { HELP_DESK_API} from './helpdesk.api';
 
@@ -44,7 +44,8 @@ export class TicketService {
   }
 
   changeStatus(status:string, ticket: Ticket){
-    return this.http.put(`${HELP_DESK_API}/api/ticket/${ticket.id}/${ticket.status}`, status);
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+    return this.http.put(`${HELP_DESK_API}/api/ticket/${ticket.id}/${status}`,{headers: headers});
   }
 
   summary(){

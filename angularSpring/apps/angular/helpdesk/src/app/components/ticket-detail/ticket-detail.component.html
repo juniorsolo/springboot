@@ -49,7 +49,7 @@
                  (click)="changeStatus('Assigned')" 
                  class="btn btn-primary">Accept</button>
 
-                <button *ngIf="shared.user.profile == 'TECHNICIAN' && (ticket.status == 'New' || ticket.status == 'Disapproved')" 
+                <button *ngIf="shared.user.profile == 'TECHNICIAN' && (ticket.status == 'Assigned' || ticket.status == 'Disapproved')" 
                  (click)="changeStatus('Resolved')" 
                  class="btn btn-primary">Resolve</button>
 
