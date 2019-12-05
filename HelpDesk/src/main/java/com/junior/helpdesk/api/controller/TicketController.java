@@ -341,7 +341,7 @@ public class TicketController {
 		int amountNew = 0;
 		int amountResolved = 0;
 		int amountApproved = 0;
-		int amountDisaproved = 0;
+		int amountDisapproved = 0;
 		int amountAssigned = 0;
 		int amountClosed = 0;
 		
@@ -363,7 +363,7 @@ public class TicketController {
 					amountClosed++;
 				}
 				if(ticket.getStatus().equals(StatusEnum.Disapproved)) {
-					amountDisaproved++;
+					amountDisapproved++;
 				}
 				if(ticket.getStatus().equals(StatusEnum.Resolved)) {
 					amountResolved++;
@@ -373,7 +373,7 @@ public class TicketController {
 		summary.setAmountApproved(amountApproved);
 		summary.setAmountAssigned(amountAssigned);
 		summary.setAmountClosed(amountClosed);
-		summary.setAmountDisaproved(amountDisaproved);
+		summary.setAmountDisapproved(amountDisapproved);
 		summary.setAmountNew(amountNew);
 		summary.setAmountResolved(amountResolved);
 		

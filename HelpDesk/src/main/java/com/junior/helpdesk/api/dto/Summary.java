@@ -9,7 +9,7 @@ public class Summary implements Serializable {
 	private Integer amountNew;
 	private Integer amountResolved;
 	private Integer amountApproved;
-	private Integer amountDisaproved;
+	private Integer amountDisapproved;
 	private Integer amountAssigned;
 	private Integer amountClosed;
 	
@@ -32,11 +32,11 @@ public class Summary implements Serializable {
 	public void setAmountApproved(Integer amountApproved) {
 		this.amountApproved = amountApproved;
 	}
-	public Integer getAmountDisaproved() {
-		return amountDisaproved;
+	public Integer getAmountDisapproved() {
+		return amountDisapproved;
 	}
-	public void setAmountDisaproved(Integer amountDisaproved) {
-		this.amountDisaproved = amountDisaproved;
+	public void setAmountDisapproved(Integer amountDisapproved) {
+		this.amountDisapproved = amountDisapproved;
 	}
 	public Integer getAmountAssigned() {
 		return amountAssigned;
